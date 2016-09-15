@@ -1,16 +1,16 @@
 var gulp = require('gulp'),
-	util = require('gulp-util'),
-	sass = require('gulp-sass'),
-	autoprefixer = require('gulp-autoprefixer'),
-	uglify = require('gulp-uglify'),
-	sourcemaps = require('gulp-sourcemaps'),
-	imagemin = require('gulp-imagemin'),
-	babelify = require('babelify'),
-	rename = require('gulp-rename'),
-	util = require('gulp-util'),
-	bro = require('gulp-bro'),
-	browserSync = require('browser-sync'),
-	sync = browserSync.create('first server');
+    util = require('gulp-util'),
+    sass = require('gulp-sass'),
+    autoprefixer = require('gulp-autoprefixer'),
+    uglify = require('gulp-uglify'),
+    sourcemaps = require('gulp-sourcemaps'),
+    imagemin = require('gulp-imagemin'),
+    babelify = require('babelify'),
+    rename = require('gulp-rename'),
+    util = require('gulp-util'),
+    bro = require('gulp-bro'),
+    browserSync = require('browser-sync'),
+    sync = browserSync.create('first server');
 
 
 //////////////////////////////////////////////////////////////////
@@ -24,15 +24,15 @@ var production = (util.env.production ? true : false);
 // SASS compiler
 ////////////////////////////////////////////////////////////////
 gulp.task('sass', function(){
-	gulp.src('src/sass/styles.scss')
-		.pipe(sourcemaps.init())
-		.pipe(sass.sync({ outputStyle: 'compressed' }))
-		.pipe(autoprefixer({
-			browsers: ['last 2 versions'],
-			cascade: false
-		}))
-		.pipe(sourcemaps.write('.'))
-	.pipe(gulp.dest('public/css/'));
+    gulp.src('src/sass/styles.scss')
+        .pipe(sourcemaps.init())
+        .pipe(sass.sync({ outputStyle: 'compressed' }))
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
+        .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('public/css/'));
 });
 
 
@@ -40,27 +40,27 @@ gulp.task('sass', function(){
 // ES6 Javascript builder
 ////////////////////////////////////////////////////////////////
 gulp.task('js', function(){
-	var extension = react ? 'jsx' : 'js';
-	var presets = [ 'es2015' ];
+    var extension = react ? 'jsx' : 'js';
+    var presets = [ 'es2015' ];
 
-	if(react){
-		presets.push('react');
-	}
+    if(react){
+        presets.push('react');
+    }
 
-	gulp.src('src/js/app.' + extension, {read: false })
-		.pipe(bro({
-			debug: true,
-			transform: [
-				babelify.configure({
-					presets: presets
-				})
-			]
-		}))
-		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(uglify())
-		.pipe(sourcemaps.write('.'))
-		.pipe(rename('app.js'))
-	.pipe(gulp.dest('public/js'));
+    gulp.src('src/js/app.' + extension, {read: false })
+        .pipe(bro({
+            debug: true,
+            transform: [
+                babelify.configure({
+                    presets: presets
+                })
+            ]
+        }))
+        .pipe(sourcemaps.init({ loadMaps: true }))
+        .pipe(uglify())
+        .pipe(sourcemaps.write('.'))
+        .pipe(rename('app.js'))
+    .pipe(gulp.dest('public/js'));
 });
 
 
@@ -68,9 +68,9 @@ gulp.task('js', function(){
 // Image optimization
 ////////////////////////////////////////////////////////////////
 gulp.task('images', function(){
-	gulp.src('src/assets/images/*.{png,gif,jpg}')
-		.pipe(imagemin())
-	.pipe(gulp.dest('public/assets/images/'));
+    gulp.src('src/assets/images/*.{png,gif,jpg}')
+        .pipe(imagemin())
+    .pipe(gulp.dest('public/assets/images/'));
 });
 
 
@@ -78,16 +78,16 @@ gulp.task('images', function(){
 // Watcher
 ////////////////////////////////////////////////////////////////
 gulp.task('watch', function(){
-	sync.init({
-		open: false,
-		port: 8089,
-		server: './public/'
-	});
+    sync.init({
+        open: false,
+        port: 8089,
+        server: './public/'
+    });
 
-	gulp.watch('src/sass/**.scss', ['sass']).on('change', sync.reload);
-	gulp.watch('src/js/**.{js,jsx}', ['js']).on('change', sync.reload);
-	gulp.watch('src/assets/images/**', ['images']).on('change', sync.reload);
-	gulp.watch('public/**.html').on('change', sync.reload);
+    gulp.watch('src/sass/**.scss', ['sass']).on('change', sync.reload);
+    gulp.watch('src/js/**.{js,jsx}', ['js']).on('change', sync.reload);
+    gulp.watch('src/assets/images/**', ['images']).on('change', sync.reload);
+    gulp.watch('public/**.html').on('change', sync.reload);
 });
 
 
@@ -95,8 +95,8 @@ gulp.task('watch', function(){
 // Default task
 ////////////////////////////////////////////////////////////////
 gulp.task('default', [
-	'sass',
-	'js',
-	'images',
-	'watch'
+    'sass',
+    'js',
+    'images',
+    'watch'
 ]);
