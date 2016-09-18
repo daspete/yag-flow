@@ -5,10 +5,11 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     sourcemaps = require('gulp-sourcemaps'),
     imagemin = require('gulp-imagemin'),
+    browserify = require('browserify'),
     babelify = require('babelify'),
     rename = require('gulp-rename'),
-    util = require('gulp-util'),
-    bro = require('gulp-bro'),
+    buffer = require('vinyl-buffer'),
+    source = require('vinyl-source-stream'),
     browserSync = require('browser-sync'),
     sync = browserSync.create('first server');
 
@@ -47,20 +48,23 @@ gulp.task('js', function(){
         presets.push('react');
     }
 
-    gulp.src('src/js/app.' + extension, {read: false })
-        .pipe(bro({
-            debug: true,
-            transform: [
-                babelify.configure({
-                    presets: presets
-                })
-            ]
-        }))
+    var _browserify = browserify({
+        entries: 'src/js/app.' + extension,
+        debug: true,
+        transform: [
+            babelify.configure({
+                presets: presets
+            })
+        ]
+    });
+
+    return _browserify.bundle()
+        .pipe(source('app.js'))
+        .pipe(buffer())
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(uglify())
         .pipe(sourcemaps.write('.'))
-        .pipe(rename('app.js'))
-    .pipe(gulp.dest('public/js'));
+        .pipe(gulp.dest('public/js'));
 });
 
 
