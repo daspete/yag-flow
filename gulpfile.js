@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
     util = require('gulp-util'),
     sass = require('gulp-sass'),
+    gulpif = require('gulp-if'),
     autoprefixer = require('gulp-autoprefixer'),
     uglify = require('gulp-uglify'),
     sourcemaps = require('gulp-sourcemaps'),
@@ -25,13 +26,13 @@ var production = (util.env.production ? true : false);
 ////////////////////////////////////////////////////////////////
 gulp.task('sass', function(){
     gulp.src('src/sass/styles.scss')
-        .pipe(sourcemaps.init())
+        .pipe(gulpif(!production, sourcemaps.init()))
         .pipe(sass.sync({ outputStyle: 'compressed' }))
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
             cascade: false
         }))
-        .pipe(sourcemaps.write('.'))
+        .pipe(gulpif(!production, sourcemaps.write('.')))
     .pipe(gulp.dest('public/css/'));
 });
 
@@ -49,7 +50,7 @@ gulp.task('js', function(){
 
     var _browserify = browserify({
         entries: 'src/js/app.' + extension,
-        debug: true,
+        debug: production ? false : true,
         transform: [
             babelify.configure({
                 presets: presets
@@ -60,9 +61,9 @@ gulp.task('js', function(){
     return _browserify.bundle()
         .pipe(source('app.js'))
         .pipe(buffer())
-        .pipe(sourcemaps.init({ loadMaps: true }))
+        .pipe(gulpif(!production, sourcemaps.init({ loadMaps: true })))
         .pipe(uglify())
-        .pipe(sourcemaps.write('.'))
+        .pipe(gulpif(!production, sourcemaps.write('.')))
         .pipe(gulp.dest('public/js'));
 });
 
